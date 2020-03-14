@@ -10,7 +10,10 @@ exports.insert_product = (req, res) => {
             if (err){
                 res.send(err);
             }
-            res.json(result);
+            res.status(201).json({
+                message: 'handling POST request to /products',
+                result: result
+            });
         });
     }
     else {
@@ -25,4 +28,18 @@ exports.get_all_products = (req, res) => {
         }
         res.json(result);
     });
+}
+
+exports.get_id_product = (req, res) => {
+    const id = req.params.productId;
+
+    Product.getProductById(id, (err, result) => {
+        if(err) {
+            res.send(err);
+        }
+        res.status(200).json({
+            message: 'handling get request for /product/:id',
+            result: result
+        });
+    })
 }
