@@ -1,23 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.status(200).json({
-        message: 'Order get mthod0'
-    })
-})
+//Controllers
+const { get_all_orders, insert_order } = require('../controllers/orderController');
+
+router.get('/', get_all_orders);
 
 
-router.post('/', (req, res) => {
-    const order = {
-        productId: req.body.productId,
-        quantity: req.body.quantity 
-    };
-    res.status(201).json({
-        message: 'Order post mthod0',
-        order: order
-    })
-})
+router.post('/', insert_order);
 
 
 router.get('/:orderId', (req, res) => {
