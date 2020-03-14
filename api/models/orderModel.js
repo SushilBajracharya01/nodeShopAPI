@@ -25,4 +25,28 @@ Order.insertNewOrder = (newOrder, result ) => {
     })
 };
 
+Order.getOrderById = (id, result) => {
+    con.query('select * from orders where productId = ?',id, (err, res)=>{
+        if(err){
+            console.log("DB Error: ", err);
+            result(err, res);
+        }
+        else{
+            result(null, res);
+        }
+    })
+}
+
+Order.deleteOrderById =(id, result)=>{
+    con.query('Delete from Orders where productId=?',id,(err, res) => {
+        if(err){
+            console.log("DB Error: ",err);
+            result(err, res);
+        }
+        else{
+            result(null, res);
+        }
+    })
+}
+
 module.exports = Order;

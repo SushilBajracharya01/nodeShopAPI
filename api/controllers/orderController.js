@@ -36,3 +36,33 @@ exports.get_all_orders = (req, res) => {
         }
     });
 }
+
+exports.get_id_order = (req, res) => {
+    const id = req.params.orderId;
+    Order.getOrderById(id, (err, result)=>{
+        if(err) {
+            res.send(err);
+        }
+        else{
+            res.status(200).json({
+                message: 'handling get request for /orders/:orderId',
+                result: result
+            });
+        }
+    });
+}
+
+exports.delete_order = (req, res) => {
+    const id = req.params.orderId;
+    Order.deleteOrderById(id, (err, result) => {
+        if(err) {
+            res.send(err);
+        }
+        else{
+            res.status(200).json({
+                message: 'handling delete request for /orders/:id',
+                result: result
+            })
+        }
+    });
+}
