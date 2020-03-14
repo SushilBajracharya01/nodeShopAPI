@@ -1,12 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const {insert_product} = require('../controllers/appController');
+const {insert_product, get_all_products} = require('../controllers/productController');
 
-router.get('/', (req, res) => {
-    res.status(200).json({
-        message: 'Handling GET request to /products',
-    })
-})
+router.get('/', get_all_products);
 
 
 // router.post('/', (req, res) => {

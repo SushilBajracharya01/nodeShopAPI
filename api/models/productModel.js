@@ -1,12 +1,7 @@
 var con = require('./mysqlDb');
 
 
-//Product object constructor.
-var Product = function(product) {
-    this.name = product.name;
-    this.price = product.price;
-}
-
+var Product=new Object();
 
 Product.insertNewProduct = function(newProduct, result) {
     con.query("Insert into products set ?", newProduct, function(err, res) {
@@ -17,6 +12,17 @@ Product.insertNewProduct = function(newProduct, result) {
             result(null,res);
         }
     } )
+}
+
+Product.getAllProducts = function(result) {
+    con.query("Select * from products", (err, res) => {
+        if(err) {
+            console.log('error: ', err);
+        }
+        else {
+            result(null, res)
+        }
+    })
 }
 
 module.exports = Product;
