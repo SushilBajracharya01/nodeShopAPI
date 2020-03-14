@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const {insert_product} = require('../controllers/appController');
 
 router.get('/', (req, res) => {
     res.status(200).json({
@@ -8,14 +9,28 @@ router.get('/', (req, res) => {
 })
 
 
-router.post('/', (req, res) => {
-    res.status(201).json({
-        message: 'Handling POST request to /products'
-    })
-})
+// router.post('/', (req, res) => {
+
+//     const product = {
+//         name: req.body.name,
+//         price: req.body.price
+//     };
+
+//     insert_product(res, req);
+
+
+
+//     res.status(201).json({
+//         message: 'Handling POST request to /products',
+//         createdProduct: product
+//     })
+// })
+
+router.post('/',insert_product);
 
 router.get('/:productId', (req, res)=> {
     const id = req.params.productId;
+
     if( id === 'special')
     res.status(200).json({
         message: 'You discovered a special ID'
