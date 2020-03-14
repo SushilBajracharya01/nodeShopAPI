@@ -10,10 +10,12 @@ exports.insert_product = (req, res) => {
             if (err){
                 res.send(err);
             }
-            res.status(201).json({
-                message: 'handling POST request to /products',
-                result: result
-            });
+            else{
+                res.status(201).json({
+                    message: 'handling POST request to /products',
+                    result: result
+                });
+            }
         });
     }
     else {
@@ -26,7 +28,12 @@ exports.get_all_products = (req, res) => {
         if (err){
             res.send(err);
         }
-        res.json(result);
+        else{
+            res.status(200).json({
+                message: 'handling get request for /products',
+                result: result
+            });
+        }
     });
 }
 
@@ -37,9 +44,27 @@ exports.get_id_product = (req, res) => {
         if(err) {
             res.send(err);
         }
-        res.status(200).json({
-            message: 'handling get request for /product/:id',
-            result: result
-        });
+        else{
+            res.status(200).json({
+                message: 'handling get request for /product/:id',
+                result: result
+            });
+        }
+    })
+}
+
+exports.delete_id_product = (req, res) => {
+    const id = req.params.productId;
+
+    Product.deleteProductById(id, (err, result) => {
+        if(err) {
+            res.send(err);
+        }
+        else{
+            res.status(200).json({
+                message: 'handling delete request for /product/:id',
+                result: result
+            })
+        }
     })
 }
