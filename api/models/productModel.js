@@ -4,6 +4,7 @@ var con = require('./mysqlDb');
 var Product=new Object();
 
 Product.insertNewProduct = function(newProduct, result) {
+    console.log(newProduct)
     con.query("Insert into products set ?", newProduct, function(err, res) {
         if(err) {
             console.log('DB error: ', err);
@@ -47,6 +48,18 @@ Product.deleteProductById = function ( id, result ) {
             result(err,res);
         }
         else {
+            result(null, res);
+        }
+    })
+}
+
+Product.patchById = function (newProduct, id, result) {
+    con.query(`Update products set ? where productId=${id}`,newProduct, (err, res) => {
+        if(err) {
+            console.log("DB ERROR: ", err);
+            result(err, res);
+        }
+        else{
             result(null, res);
         }
     })

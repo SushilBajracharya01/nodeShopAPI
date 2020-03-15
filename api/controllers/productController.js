@@ -68,3 +68,28 @@ exports.delete_id_product = (req, res) => {
         }
     })
 }
+
+exports.patch_id_product = (req, res) => {
+    const id = req.params.productId;
+    const newProduct = req.body;
+
+    var responseIsValid = newProduct.name && newProduct.price && id;
+
+    if(responseIsValid) {
+        Product.patchById(newProduct, id, (err, result)=> {
+            if(err) {
+                res.send(err);
+            }
+            else {
+                res.status(200).json({
+                    message: 'handling patch for /products/:id',
+                    result: result
+                })
+            }
+        })
+    }
+    else{
+        res.status(400).send({ error: true, message: 'Name and Price value must not be null' })
+    }
+    
+}

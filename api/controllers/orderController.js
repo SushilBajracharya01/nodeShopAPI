@@ -40,8 +40,12 @@ exports.get_all_orders = (req, res) => {
 exports.get_id_order = (req, res) => {
     const id = req.params.orderId;
     Order.getOrderById(id, (err, result)=>{
+        console.log(err)
+
         if(err) {
-            res.send(err);
+            res.status(404).json({
+                err: "404 Content not found"
+            });
         }
         else{
             res.status(200).json({
@@ -55,6 +59,7 @@ exports.get_id_order = (req, res) => {
 exports.delete_order = (req, res) => {
     const id = req.params.orderId;
     Order.deleteOrderById(id, (err, result) => {
+    
         if(err) {
             res.send(err);
         }

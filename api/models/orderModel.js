@@ -32,7 +32,13 @@ Order.getOrderById = (id, result) => {
             result(err, res);
         }
         else{
-            result(null, res);
+            if ( res.length ) {
+                result(null, res);
+            }
+            else{
+                const err = new Error("404 Content Not Found");
+                result(err, res);
+            }
         }
     })
 }
