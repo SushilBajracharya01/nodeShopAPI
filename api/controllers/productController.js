@@ -7,12 +7,12 @@ exports.insert_product = (req, res) => {
 
     if (responseIsValid) {
         Product.insertNewProduct(newProduct, (err, result) => {
-            if (err){
+            if (err) {
                 res.send(err);
             }
-            else{
+            else {
                 res.status(201).json({
-                    message: 'handling POST request to /products',
+                    message: 'Created product successfully',
                     result: result
                 });
             }
@@ -24,15 +24,28 @@ exports.insert_product = (req, res) => {
 }
 
 exports.get_all_products = (req, res) => {
-    Product.getAllProducts( (err, result) => {
-        if (err){
+    Product.getAllProducts((err, result) => {
+        if (err) {
             res.send(err);
         }
-        else{
-            res.status(200).json({
+        else {
+
+            const response = {
                 message: 'handling get request for /products',
-                result: result
-            });
+                count: result.length,
+                result: result.map(item => {
+                    return {
+                        productId: item.productId,
+                        name: item.name,
+                        price: item.price,
+                        request: {
+                            type: 'GET',
+                            url: 'http://localhost:3000/products/' + item.productId,
+                        }
+                    }
+                })
+            }
+            res.status(200).json(response);
         }
     });
 }
@@ -41,10 +54,10 @@ exports.get_id_product = (req, res) => {
     const id = req.params.productId;
 
     Product.getProductById(id, (err, result) => {
-        if(err) {
+        if (err) {
             res.send(err);
         }
-        else{
+        else {
             res.status(200).json({
                 message: 'handling get request for /product/:id',
                 result: result
@@ -57,13 +70,21 @@ exports.delete_id_product = (req, res) => {
     const id = req.params.productId;
 
     Product.deleteProductById(id, (err, result) => {
-        if(err) {
+        if (err) {
             res.send(err);
         }
-        else{
+        else {
             res.status(200).json({
                 message: 'handling delete request for /product/:id',
-                result: result
+                result: result,
+                request: {
+                    type: 'POST',
+                    url: 'http://localhost:3000/products/',
+                    body: {
+                        name: 'String',
+                        price: 'Number'
+                    }
+                }
             })
         }
     })
@@ -75,9 +96,9 @@ exports.patch_id_product = (req, res) => {
 
     var responseIsValid = newProduct.name && newProduct.price && id;
 
-    if(responseIsValid) {
-        Product.patchById(newProduct, id, (err, result)=> {
-            if(err) {
+    if (responseIsValid) {
+        Product.patchById(newProduct, id, (err, result) => {
+            if (err) {
                 res.send(err);
             }
             else {
@@ -88,8 +109,8 @@ exports.patch_id_product = (req, res) => {
             }
         })
     }
-    else{
+    else {
         res.status(400).send({ error: true, message: 'Name and Price value must not be null' })
     }
-    
+
 }

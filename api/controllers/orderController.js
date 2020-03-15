@@ -12,7 +12,7 @@ exports.insert_order = (req, res) => {
             }
             else{
                 res.status(201).json({
-                    message: 'handling Post method request for /orders',
+                    message: 'Created Order successfully',
                     result: result
                 })
             }
@@ -29,10 +29,21 @@ exports.get_all_orders = (req, res) => {
             res.send(err);
         }
         else {
-            res.status(200).json({
-                message: 'handling get for /orders',
-                result: result
-            })
+            const response = {
+                message: 'Returning all Orders',
+                count: result.length,
+                result: result.map(item => {
+                    return {
+                        productId: item.productId,
+                        quantity: item.quantity,
+                        request: {
+                            type: 'GET',
+                            url: 'http://localhost:3000/orders/' + item.productId,
+                        }
+                    }
+                })
+            }
+            res.status(200).json(response);
         }
     });
 }
@@ -66,6 +77,14 @@ exports.delete_order = (req, res) => {
         else{
             res.status(200).json({
                 message: 'handling delete request for /orders/:id',
+                request: {
+                    type: 'POST',
+                    url: 'http://localhost:3000/orders/',
+                    body: {
+                        productId: 'Number',
+                        quantity: 'Number'
+                    }
+                },
                 result: result
             })
         }
