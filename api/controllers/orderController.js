@@ -1,31 +1,50 @@
 const Order = require('../models/orderModel');
+const Product = require('../models/productModel');
 
 exports.insert_order = (req, res) => {
     const newOrder = req.body;
-    //handles null error
-    var responseIsValid = newOrder.productId && newOrder.quantity;
+    Product.getProductById(newOrder.productId, (err, productResult) => {
+        if (productResult.length == 0) {
+            res.status(404).json({
+                message: 'Product does not Exist'
+            })
+        }
+        else {
+            //handles null error
+            var responseIsValid = newOrder.productId;
 
-    if( responseIsValid ) {
-        Order.insertNewOrder(newOrder, (err, result) => {
-            if(err) {
-                res.send(err);
+            newOrder.quantity = newOrder.quantity || 1;
+
+            if (responseIsValid) {
+                Order.insertNewOrder(newOrder, (err, orderResult) => {
+                    if (err) {
+                        res.send(err);
+                    }
+                    else {
+                        console.log(result[0].name)
+                        res.status(201).json({
+                            message: 'Created Order successfully',
+                            createdOrder: {
+                                productId: newOrder.productId,
+                                quantity: newOrder.quantity,
+                                name: result[0].name,
+                                price: result[0].price
+                            },
+                        })
+                    }
+                });
             }
-            else{
-                res.status(201).json({
-                    message: 'Created Order successfully',
-                    result: result
-                })
+            else {
+                res.status(400).send({ error: true, message: 'ProductId and quantity must not be null' })
             }
-        });
-    }
-    else {
-        res.status(400).send({error: true, message: 'ProductId and quantity must not be null'})
-    }
-    
+        }
+    })
+
+
 };
 exports.get_all_orders = (req, res) => {
-    Order.getAllOrders( (err, result)=> {
-        if(err) {
+    Order.getAllOrders((err, result) => {
+        if (err) {
             res.send(err);
         }
         else {
@@ -50,15 +69,15 @@ exports.get_all_orders = (req, res) => {
 
 exports.get_id_order = (req, res) => {
     const id = req.params.orderId;
-    Order.getOrderById(id, (err, result)=>{
+    Order.getOrderById(id, (err, result) => {
         console.log(err)
 
-        if(err) {
+        if (err) {
             res.status(404).json({
                 err: "404 Content not found"
             });
         }
-        else{
+        else {
             res.status(200).json({
                 message: 'handling get request for /orders/:orderId',
                 result: result
@@ -70,11 +89,11 @@ exports.get_id_order = (req, res) => {
 exports.delete_order = (req, res) => {
     const id = req.params.orderId;
     Order.deleteOrderById(id, (err, result) => {
-    
-        if(err) {
+
+        if (err) {
             res.send(err);
         }
-        else{
+        else {
             res.status(200).json({
                 message: 'handling delete request for /orders/:id',
                 request: {

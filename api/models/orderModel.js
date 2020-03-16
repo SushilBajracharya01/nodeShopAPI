@@ -16,7 +16,7 @@ Order.getAllOrders = ( result ) => {
 Order.insertNewOrder = (newOrder, result ) => {
     con.query("Insert into Orders set ?", newOrder, (err, res)=>{
         if(err) {
-            console.log('DB error: ', err);
+            console.log('DB error from insertNewOrder: ', err);
             result(err, res);
         }
         else{
