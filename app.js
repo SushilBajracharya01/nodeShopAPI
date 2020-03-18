@@ -1,28 +1,23 @@
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const mysql = require('mysql');
-
-// connection configurations
-const mc = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: process.env.MYSQL_PW,
-    database: 'nodeRestShop'
-});
- 
-// connect to database
-mc.connect();
+const path = require('path');
+const fileUpload = require('express-fileupload');
 
 const productsRoute = require('./api/routes/products');
 const ordersRoute = require('./api/routes/orders');
+const imageRoute = require('./api/routes/images');
 
 const app = express();
 
 
 app.use(morgan('dev'));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 app.use(bodyParser.json());
+app.use(fileUpload());
 
 app.use((req, res,next) => {
     res.header('Access-Control-Allow-Origin', '*');
@@ -38,7 +33,7 @@ app.use((req, res,next) => {
 
 app.use('/products', productsRoute);
 app.use('/orders', ordersRoute);
-
+app.use('/image', imageRoute);
 
 app.use((req, res, next) => {
     const error = new Error('Not Found');

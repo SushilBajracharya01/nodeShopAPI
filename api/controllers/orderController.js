@@ -21,14 +21,13 @@ exports.insert_order = (req, res) => {
                         res.send(err);
                     }
                     else {
-                        console.log(result[0].name)
                         res.status(201).json({
                             message: 'Created Order successfully',
                             createdOrder: {
                                 productId: newOrder.productId,
                                 quantity: newOrder.quantity,
-                                name: result[0].name,
-                                price: result[0].price
+                                name: productResult[0].name,
+                                price: productResult[0].price
                             },
                         })
                     }
