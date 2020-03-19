@@ -7,7 +7,7 @@ const fileUpload = require('express-fileupload');
 const productsRoute = require('./api/routes/products');
 const ordersRoute = require('./api/routes/orders');
 const imageRoute = require('./api/routes/images');
-
+const userRoute = require('./api/routes/users');
 const app = express();
 
 
@@ -34,6 +34,7 @@ app.use((req, res,next) => {
 app.use('/products', productsRoute);
 app.use('/orders', ordersRoute);
 app.use('/image', imageRoute);
+app.use('/user',userRoute);
 
 app.use((req, res, next) => {
     const error = new Error('Not Found');

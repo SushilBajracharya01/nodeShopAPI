@@ -13,3 +13,29 @@ User.signUpUser = function (newUser, result) {
         }
     })
 }
+
+User.removeUser = function (userId, result) {
+    con.query(`DELETE FROM users where userId = ${userId};`,userId, function(err, res) {
+        if(err) {
+            console.log('RemoveUser DB error: ', err);
+            result(err, res);
+        }
+        else{
+            result(null,res);
+        }
+    })
+}
+
+User.findUser = function (userEmail, result) {
+    con.query(`Select * from users where email = '${userEmail}'`, userEmail, function(err, res) {
+        if(err) {
+            console.log('FindUser DB error: ', err);
+            result(err, res);
+        }
+        else{
+            result(null,res);
+        }
+    })
+}
+
+module.exports = User;
