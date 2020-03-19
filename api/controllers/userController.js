@@ -8,7 +8,7 @@ exports.signUP_user = (req, res) => {
     if (responseIsNotEmpty) {
         var emailIsValid = validator.validate(newUser.email);
         console.log(emailIsValid);
-        if( emailIsValid ) {
+        if (emailIsValid) {
             bcrypt.hash(newUser.password, 10, (err, hash) => {
                 if (err) {
                     return res.status(500).json({
@@ -36,7 +36,7 @@ exports.signUP_user = (req, res) => {
                 message: 'Invalid Email'
             })
         }
-        
+
     }
     else {
         res.status(400).send({ error: true, message: 'Email and password must not be null' });
@@ -44,23 +44,33 @@ exports.signUP_user = (req, res) => {
 }
 
 exports.login_user = (req, res) => {
-    var userEmail = req.body.email;
-    console.log(userEmail)
 
-    User.findUser(userEmail, (err, result) => {
-        if(err) {
+    User.findUser(req.body, (err, result) => {
+        if (err) {
             res.send(err);
         }
-        else{
-            if(result.length === 0){
-                res.send(404).json({error: 'User doesnot exits'})
-            }
-            else{
-                res.status(400).json({result:result});
-                //assign jwt
-            }
+        else if (result.length < 1) {
+            res.status(401).json({ message: 'Auth Failed' });
         }
-    })
+        else {
+
+            // res.status(400).json({result:result});
+            bcrypt.compare(req.body.password, result[0].password, (err, result) => {
+
+                if (err) {
+                    res.status(401).json({ message: 'Auth Failed' });
+                }
+                else if (result) {
+                    return res.status(200).json({ message: 'Auth Successful' });
+                }
+                else {
+                    res.status(401).json({ message: 'Auth Failed' });
+                }
+            })
+            //assign jwt
+
+        }
+    });
 }
 
 

@@ -26,8 +26,8 @@ User.removeUser = function (userId, result) {
     })
 }
 
-User.findUser = function (userEmail, result) {
-    con.query(`Select * from users where email = '${userEmail}'`, userEmail, function(err, res) {
+User.findUser = function (user, result) {
+    con.query(`Select * from users where email = '${user.email}';`, function(err, res) {
         if(err) {
             console.log('FindUser DB error: ', err);
             result(err, res);
