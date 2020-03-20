@@ -1,5 +1,6 @@
 var User = require('../models/userModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 var validator = require("email-validator");
 
 exports.signUP_user = (req, res) => {
@@ -61,13 +62,22 @@ exports.login_user = (req, res) => {
                     res.status(401).json({ message: 'Auth Failed' });
                 }
                 else if (result) {
-                    return res.status(200).json({ message: 'Auth Successful' });
+                    // console.log(req.body);
+                    const token = jwt.sign(
+                        {
+                            email: req.body.email
+                        },
+                        process.env.JWT_KEY,
+                        {
+                            expiresIn: '1h'
+                        }
+                    )
+                    return res.status(200).json({ message: 'Auth Successful', token: token });
                 }
                 else {
                     res.status(401).json({ message: 'Auth Failed' });
                 }
             })
-            //assign jwt
 
         }
     });
