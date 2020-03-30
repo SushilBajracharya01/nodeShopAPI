@@ -3,9 +3,21 @@ var con = require('./mysqlDb');
 
 var Product=new Object();
 
+// Product.insertNewProduct = function(newProduct, result) {
+//     console.log(newProduct)
+//     con.query("Insert into products set ?", newProduct, function(err, res) {
+//         if(err) {
+//             console.log('DB error: ', err);
+//             result(err,res);
+//         }
+//         else {
+//             result(null,res);
+//         }
+//     } )
+// }
 Product.insertNewProduct = function(newProduct, result) {
     console.log(newProduct)
-    con.query("Insert into products set ?", newProduct, function(err, res) {
+    con.query("Insert into products(name, price) values (?,?);", [newProduct.name, newProduct.price], function(err, res) {
         if(err) {
             console.log('DB error: ', err);
             result(err,res);
